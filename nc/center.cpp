@@ -10,7 +10,6 @@ vector<string> wrapstring(string str, int max, int pad) {
   int linelen=0;
   int wraps=0;
 
-
   for(int i=0; i<str.length(); i++) {
     if(str[i]!=' ')
       temp+=str[i];
@@ -24,7 +23,6 @@ vector<string> wrapstring(string str, int max, int pad) {
   for(int i=0; i<words.size(); i++) {
     if(linelen+words[i].length()>max) {
       wraps++; 
-      // mvprintw(wraps, 0, "Wrapped at %d, max is %d, word is %d %d", linelen, max, i, words[i].length());
       linelen=0;
       wrapped.push_back(temp);
       temp="";
@@ -57,7 +55,7 @@ int main(int argc, char *argv[]) {
   int targetx, targety;
   int max=80;
   int pad=10;
-  int lines=0;
+  int padding=0;
 
   vector<string> words;
 
@@ -73,7 +71,8 @@ int main(int argc, char *argv[]) {
   // mvprintw(0, 0, "Passed");
 
   for(int i=0; i<words.size(); i++) {
-    mvprintw(15+i, 10, words[i].c_str());
+    padding = (max-words[i].length())/2;   
+    mvprintw(15+i, 10+padding, words[i].c_str());
   }
    
   // Get terminal dimensions and find the center
