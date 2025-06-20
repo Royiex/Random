@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-vector<string> wrapstring(string str, int max, int pad) {
+vector<string> wrapstring(string str, int max) {
   vector<string> words;
   vector<string> wrapped;
   string temp="";
@@ -41,50 +41,39 @@ vector<string> wrapstring(string str, int max, int pad) {
 
 int main(int argc, char *argv[]) {
   // Check for argument, if none return Error
-  if(argc==1) {
+  if(argc<2) {
     printf("Error, no arguments given");
     return 1;
   }
 
-
-  char *arg1 = argv[1];
-  string arg = string(arg1);
-
   // Create variables
-  int x, y;  
-  int targetx, targety;
-  int max=80;
-  int pad=10;
-  int padding=0;
+  int x, y;              // terminal size
+  int targetx, targety;  // text center target
+  int max=80;            // max line length
+  int padding=0;         // padding to center text
+  vector<string> lines;  // vector containing each line
 
-  vector<string> words;
+  string arg = string(argv[argc-1]);
 
   // Initilize screen and set invisible cursor
   initscr();
-  curs_set(0);    
-
-  // Wrap lines >80
-  getmaxyx(stdscr, y, x);
-  if(x<100) max=x-20;  
-  
-  words = wrapstring(arg, max, pad);
-  // mvprintw(0, 0, "Passed");
-
-  for(int i=0; i<words.size(); i++) {
-    padding = (max-words[i].length())/2;   
-    mvprintw(15+i, 10+padding, words[i].c_str());
-  }
-   
+  curs_set(0);
+ 
   // Get terminal dimensions and find the center
-  // targety = y/2-1;
-  // targetx = x/2 - arg.length()/2;
+  getmaxyx(stdscr, y, x);
+  if(x<100) max=x-20;
 
-  // // Print text at the center
-  // mvprintw(targety, targetx, str);
+  lines = wrapstring(arg, max);
 
-  // // Print debug
-  // mvprintw(0, 0, "%d %d", targetx, targety);
+  targety = y/2-lines.size()/2;
+  targetx = (x-max)/2;
 
+  // Print lines
+  for(int i=0; i<lines.size(); i++) {
+    padding = (max-lines[i].length())/2;
+    mvprintw(targety+i, targetx+padding, "%s", lines[i].c_str());
+  }
+     
   // Wait for any input and end window
   getch();
   endwin();
