@@ -41,11 +41,11 @@ vector<string> wrapstring(string str, int max) {
 
 int main(int argc, char *argv[]) {
   // Check for argument, if none return Error
-  if(argc<2) {
-    printf("Error, no arguments given");
+  if(argc<2 || argc%2==1) {
+    printf("Error, no argument given");
     return 1;
   }
-
+  
   // Create variables
   int x, y;              // terminal size
   int targetx, targety;  // text center target
@@ -53,17 +53,24 @@ int main(int argc, char *argv[]) {
   int padding=0;         // padding to center text
   vector<string> lines;  // vector containing each line
 
-  string arg = string(argv[argc-1]);
+  string arg0 = string(argv[1]);
 
   // Initilize screen and set invisible cursor
   initscr();
   curs_set(0);
+
+  if(argc>2) {
+    string arg1 = string(argv[2]);
+    if(arg1=="-l") {
+      max=stoi(argv[3]);
+    }
+  }
  
   // Get terminal dimensions and find the center
   getmaxyx(stdscr, y, x);
-  if(x<100) max=x-20;
+  if(x<100 || x<max) max=x-20;
 
-  lines = wrapstring(arg, max);
+  lines = wrapstring(arg0, max);
 
   targety = y/2-lines.size()/2;
   targetx = (x-max)/2;
